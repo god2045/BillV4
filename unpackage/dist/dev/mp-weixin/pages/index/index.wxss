@@ -1,0 +1,25 @@
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 50rpx;
+}
+.input {
+    border-bottom: 1px solid #ccc;
+    height: 100rpx;
+    padding: 6px;
+    width: 100%;
+}
+.content>button {
+    margin: 10rpx;
+}
+.text-area {
+    display: flex;
+    justify-content: center;
+}
+.title {
+    font-size: 36rpx;
+    color: #8f8f94;
+}
