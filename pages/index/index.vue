@@ -1,7 +1,21 @@
 <template>
-  <view class="content">
-    <input type="text" class="input" v-model="content" placeholder="留言" />
-    <button type="primary" @click="publish()" size="mini">发布</button>
+  <view class="title">
+    <text>欢迎使用账单记录系统！</text>
+  </view>
+  <view class="title">
+    <text>用户：{{userName}}</text>
+    <text>当前记录数：{{billCount}}</text>
+  </view>
+  <view class="option">
+    <navigator url="/pages/addBill/index" hover-class="navigator-hover">
+      <button type="primary">添加账单</button>
+    </navigator>
+    <navigator url="/pages/showBill/index" hover-class="navigator-hover">
+      <button type="primary">查看账单</button>
+    </navigator>
+    <navigator url="/pages/statBill/index" hover-class="navigator-hover">
+      <button type="primary">统计账单</button>
+    </navigator>
   </view>
 </template>
 
@@ -9,7 +23,8 @@
   export default {
     data() {
       return {
-        content: ''
+        userName: 'test',
+        billCount: '100'
       }
     },
     onLoad() {
@@ -32,32 +47,31 @@
 </script>
 
 <style>
-  .content {
+  .title {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     margin: 50rpx;
+    height: 200rpx;
+    background-color: aliceblue;
   }
 
-  .input {
-    border-bottom: 1px solid #ccc;
-    height: 100rpx;
-    padding: 6px;
-    width: 100%;
+  .title>text {
+    font-family: system-ui;
+    font-size: 1.2rem;
   }
 
-  .content>button {
-    margin: 10rpx;
-  }
-
-  .text-area {
+  .option {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    flex: 1;
   }
 
-  .title {
-    font-size: 36rpx;
-    color: #8f8f94;
+  .option navigator {
+    margin: 30rpx;
+    padding: auto 10rpx;
   }
 </style>

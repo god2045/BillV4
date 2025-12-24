@@ -3,7 +3,23 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "留言板"
+        "navigationBarTitleText": "账单"
+      }
+    },
+    {
+      "path": "pages/addBill/index",
+      "style": {
+        "navigationBarTitleText": "添加账单"
+      }
+    }, {
+      "path": "pages/showBill/index",
+      "style": {
+        "navigationBarTitleText": "查看账单"
+      }
+    }, {
+      "path": "pages/statBill/index",
+      "style": {
+        "navigationBarTitleText": "统计账单"
       }
     }
   ],

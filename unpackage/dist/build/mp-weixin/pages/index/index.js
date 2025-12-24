@@ -1,0 +1,1 @@
+"use strict";const n=require("../../common/vendor.js"),t={data:()=>({content:""}),onLoad(){},methods:{publish(){n.tr.callFunction({name:"fun",data:{opi:"publish",content:this.content}}).then((n=>{console.log(n)}))}}};const e=n._export_sfc(t,[["render",function(n,t,e,o,c,r){return{}}]]);wx.createPage(e);

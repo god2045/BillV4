@@ -1,9 +1,6 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/addBill/index",
-    "pages/showBill/index",
-    "pages/statBill/index"
+    "pages/index/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",

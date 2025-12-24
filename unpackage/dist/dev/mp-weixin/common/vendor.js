@@ -88,6 +88,37 @@ const looseToNumber = (val) => {
   const n2 = parseFloat(val);
   return isNaN(n2) ? val : n2;
 };
+const toDisplayString = (val) => {
+  return isString(val) ? val : val == null ? "" : isArray(val) || isObject(val) && (val.toString === objectToString || !isFunction(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
+};
+const replacer = (_key, val) => {
+  if (val && val.__v_isRef) {
+    return replacer(_key, val.value);
+  } else if (isMap(val)) {
+    return {
+      [`Map(${val.size})`]: [...val.entries()].reduce(
+        (entries, [key, val2], i2) => {
+          entries[stringifySymbol(key, i2) + " =>"] = val2;
+          return entries;
+        },
+        {}
+      )
+    };
+  } else if (isSet(val)) {
+    return {
+      [`Set(${val.size})`]: [...val.values()].map((v2) => stringifySymbol(v2))
+    };
+  } else if (isSymbol(val)) {
+    return stringifySymbol(val);
+  } else if (isObject(val) && !isArray(val) && !isPlainObject(val)) {
+    return String(val);
+  }
+  return val;
+};
+const stringifySymbol = (v2, i2 = "") => {
+  var _a;
+  return isSymbol(v2) ? `Symbol(${(_a = v2.description) != null ? _a : i2})` : v2;
+};
 const LOCALE_ZH_HANS = "zh-Hans";
 const LOCALE_ZH_HANT = "zh-Hant";
 const LOCALE_EN = "en";
@@ -5033,6 +5064,7 @@ function patchStopImmediatePropagation(e2, value) {
   }
 }
 const o$1 = (value, key) => vOn(value, key);
+const t$1 = (val) => toDisplayString(val);
 function createApp$1(rootComponent, rootProps = null) {
   rootComponent && (rootComponent.mpType = "app");
   return createVueApp(rootComponent, rootProps).use(plugin);
@@ -6856,9 +6888,9 @@ function isConsoleWritable() {
   return isWritable;
 }
 function initRuntimeSocketService() {
-  const hosts = "192.168.5.44,127.0.0.1";
+  const hosts = "192.168.0.36,127.0.0.1";
   const port = "8090";
-  const id = "mp-weixin_Q18Cf6";
+  const id = "mp-weixin_VfJPxb";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -7808,7 +7840,25 @@ const pages = [
   {
     path: "pages/index/index",
     style: {
-      navigationBarTitleText: "留言板"
+      navigationBarTitleText: "账单"
+    }
+  },
+  {
+    path: "pages/addBill/index",
+    style: {
+      navigationBarTitleText: "添加账单"
+    }
+  },
+  {
+    path: "pages/showBill/index",
+    style: {
+      navigationBarTitleText: "查看账单"
+    }
+  },
+  {
+    path: "pages/statBill/index",
+    style: {
+      navigationBarTitleText: "统计账单"
     }
   }
 ];
@@ -8149,7 +8199,7 @@ class S {
 function T(e2) {
   return e2 && "string" == typeof e2 ? JSON.parse(e2) : e2;
 }
-const b = true, E = "mp-weixin", A = T(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), P = E, C = T('{"address":["127.0.0.1","192.168.5.44"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","C:/HBuilderX.4.87.2025121004/HBuilderX/plugins/unicloud/**/*.js"]}'), O = T('[{"provider":"aliyun","spaceName":"bill-data","spaceId":"mp-49b89e7f-521f-43b1-9854-190e790d4d3e","clientSecret":"BeycGcGx7aejQ3EspJ+OIw==","endpoint":"https://api.next.bspapp.com"}]') || [];
+const b = true, E = "mp-weixin", A = T(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), P = E, C = T('{"address":["127.0.0.1","192.168.0.36"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","C:/HBuilderX.4.87.2025121004/HBuilderX/plugins/unicloud/**/*.js"]}'), O = T('[{"provider":"aliyun","spaceName":"bill-data","spaceId":"mp-49b89e7f-521f-43b1-9854-190e790d4d3e","clientSecret":"BeycGcGx7aejQ3EspJ+OIw==","endpoint":"https://api.next.bspapp.com"}]') || [];
 let N = "";
 try {
   N = "__UNI__A961326";
@@ -10675,5 +10725,6 @@ exports._export_sfc = _export_sfc;
 exports.createSSRApp = createSSRApp;
 exports.index = index;
 exports.o = o$1;
+exports.t = t$1;
 exports.tr = tr;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

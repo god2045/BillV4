@@ -1,0 +1,1 @@
+<view class="title"><text>欢迎使用账单记录系统！</text></view><view class="option"><button type="primary"><navigator url="addBill"></navigator></button><button type="primary"><navigator url="showBill"></navigator></button><button type="primary"><navigator url="statBill"></navigator></button></view>
