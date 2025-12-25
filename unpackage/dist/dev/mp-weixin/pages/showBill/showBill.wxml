@@ -1,1 +1,1 @@
-<view class="title"><view class="card"><view>{{a}}</view></view></view>
+<view class="title data-v-d6cfe255"><view class="card data-v-d6cfe255"><view wx:for="{{a}}" wx:for-item="item" wx:key="f" class="bList data-v-d6cfe255"><view class="icard data-v-d6cfe255">{{item.a}}</view><view class="icard data-v-d6cfe255">{{item.b}}</view><view class="icard data-v-d6cfe255">{{item.c}}</view><view class="icard data-v-d6cfe255">{{item.d}}</view><view class="icard data-v-d6cfe255">{{item.e}}</view><view class="icard data-v-d6cfe255"></view></view></view></view>

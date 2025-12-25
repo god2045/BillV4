@@ -1,8 +1,14 @@
 <template>
   <view class="title">
     <view class="card">
-      <view>{{billList1}}</view>
-      <!-- <view>{{item.data.typeLB}}</view> -->
+      <view v-for="item in billList" :key="item._id" class="bList">
+        <view class="icard">{{item.money}}</view>
+        <view class="icard">{{item.date}}</view>
+        <view class="icard">{{item.typeLX}}</view>
+        <view class="icard">{{item.typeLB}}</view>
+        <view class="icard">{{item.content}}</view>
+        <view class="icard"></view>
+      </view>
     </view>
   </view>
 
@@ -10,28 +16,12 @@
 
 <script setup>
   import {
+    onMounted,
     ref
   } from 'vue';
-  let billList1 = ref(billData())
-  let billList = ref([{
-      id: "11",
-      name: "yi"
-    },
-    {
-      id: "22",
-      name: "er"
-    },
-    {
-      id: "33",
-      name: "san"
-    },
-    {
-      id: "44",
-      name: "si"
-    },
-  ])
+  let billList = ref()
 
-  function billData() {
+  onMounted(
     uniCloud.callFunction({
       name: "fun",
       data: {
@@ -40,11 +30,35 @@
     }).then(res => {
       const result = res.result
       const detail = result.data
-      console.log(detail)
+      billList.value = detail
     })
-  }
+  )
 </script>
 
 <style lang="scss" scoped>
+  .title {
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
+      .bList {
+        margin: 20rpx;
+        border: 1px solid #ccc;
+        width: 80vw;
+        background-color: deepskyblue;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-around;
+        flex-wrap: wrap;
+
+        .icard {
+          width: 40%;
+          padding: 5rpx 10rpx;
+          border-bottom: 1px solid #666;
+        }
+      }
+    }
+  }
 </style>

@@ -5063,7 +5063,40 @@ function patchStopImmediatePropagation(e2, value) {
     return value;
   }
 }
+function vFor(source, renderItem) {
+  let ret;
+  if (isArray(source) || isString(source)) {
+    ret = new Array(source.length);
+    for (let i2 = 0, l2 = source.length; i2 < l2; i2++) {
+      ret[i2] = renderItem(source[i2], i2, i2);
+    }
+  } else if (typeof source === "number") {
+    if (!Number.isInteger(source)) {
+      warn(`The v-for range expect an integer value but got ${source}.`);
+      return [];
+    }
+    ret = new Array(source);
+    for (let i2 = 0; i2 < source; i2++) {
+      ret[i2] = renderItem(i2 + 1, i2, i2);
+    }
+  } else if (isObject(source)) {
+    if (source[Symbol.iterator]) {
+      ret = Array.from(source, (item, i2) => renderItem(item, i2, i2));
+    } else {
+      const keys = Object.keys(source);
+      ret = new Array(keys.length);
+      for (let i2 = 0, l2 = keys.length; i2 < l2; i2++) {
+        const key = keys[i2];
+        ret[i2] = renderItem(source[key], key, i2);
+      }
+    }
+  } else {
+    ret = [];
+  }
+  return ret;
+}
 const o$1 = (value, key) => vOn(value, key);
+const f$1 = (source, renderItem) => vFor(source, renderItem);
 const t$1 = (val) => toDisplayString(val);
 function createApp$1(rootComponent, rootProps = null) {
   rootComponent && (rootComponent.mpType = "app");
@@ -6888,9 +6921,9 @@ function isConsoleWritable() {
   return isWritable;
 }
 function initRuntimeSocketService() {
-  const hosts = "192.168.0.36,127.0.0.1";
+  const hosts = "192.168.5.44,127.0.0.1";
   const port = "8090";
-  const id = "mp-weixin_TWlU69";
+  const id = "mp-weixin_yHQ-kM";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -8199,7 +8232,7 @@ class S {
 function T(e2) {
   return e2 && "string" == typeof e2 ? JSON.parse(e2) : e2;
 }
-const b = true, E = "mp-weixin", A = T(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), P = E, C = T('{"address":["127.0.0.1","192.168.0.36"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","C:/HBuilderX.4.87.2025121004/HBuilderX/plugins/unicloud/**/*.js"]}'), O = T('[{"provider":"aliyun","spaceName":"bill-data","spaceId":"mp-49b89e7f-521f-43b1-9854-190e790d4d3e","clientSecret":"BeycGcGx7aejQ3EspJ+OIw==","endpoint":"https://api.next.bspapp.com"}]') || [];
+const b = true, E = "mp-weixin", A = T(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), P = E, C = T('{"address":["127.0.0.1","192.168.5.44"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","C:/HBuilderX.4.87.2025121004/HBuilderX/plugins/unicloud/**/*.js"]}'), O = T('[{"provider":"aliyun","spaceName":"bill-data","spaceId":"mp-49b89e7f-521f-43b1-9854-190e790d4d3e","clientSecret":"BeycGcGx7aejQ3EspJ+OIw==","endpoint":"https://api.next.bspapp.com"}]') || [];
 let N = "";
 try {
   N = "__UNI__A961326";
@@ -10724,9 +10757,11 @@ var tr = er;
 exports._export_sfc = _export_sfc;
 exports.computed = computed;
 exports.createSSRApp = createSSRApp;
+exports.f = f$1;
 exports.index = index;
 exports.isRef = isRef;
 exports.o = o$1;
+exports.onMounted = onMounted;
 exports.ref = ref;
 exports.t = t$1;
 exports.tr = tr;
