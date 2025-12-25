@@ -7,21 +7,24 @@
       }
     },
     {
-      "path": "pages/addBill/index",
+      "path": "pages/addBill/addBill",
       "style": {
         "navigationBarTitleText": "添加账单"
       }
-    }, {
-      "path": "pages/showBill/index",
+    },
+    {
+      "path": "pages/showBill/showBill",
       "style": {
-        "navigationBarTitleText": "查看账单"
+        "navigationBarTitleText": "账单列表"
       }
-    }, {
-      "path": "pages/statBill/index",
+    },
+    {
+      "path": "pages/statBill/statBill",
       "style": {
         "navigationBarTitleText": "统计账单"
       }
     }
+
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",

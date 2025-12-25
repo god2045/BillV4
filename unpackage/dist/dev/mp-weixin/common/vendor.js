@@ -6890,7 +6890,7 @@ function isConsoleWritable() {
 function initRuntimeSocketService() {
   const hosts = "192.168.0.36,127.0.0.1";
   const port = "8090";
-  const id = "mp-weixin_VfJPxb";
+  const id = "mp-weixin_TWlU69";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -7844,19 +7844,19 @@ const pages = [
     }
   },
   {
-    path: "pages/addBill/index",
+    path: "pages/addBill/addBill",
     style: {
       navigationBarTitleText: "添加账单"
     }
   },
   {
-    path: "pages/showBill/index",
+    path: "pages/showBill/showBill",
     style: {
-      navigationBarTitleText: "查看账单"
+      navigationBarTitleText: "账单列表"
     }
   },
   {
-    path: "pages/statBill/index",
+    path: "pages/statBill/statBill",
     style: {
       navigationBarTitleText: "统计账单"
     }
@@ -10722,9 +10722,13 @@ let er = new class {
 })();
 var tr = er;
 exports._export_sfc = _export_sfc;
+exports.computed = computed;
 exports.createSSRApp = createSSRApp;
 exports.index = index;
+exports.isRef = isRef;
 exports.o = o$1;
+exports.ref = ref;
 exports.t = t$1;
 exports.tr = tr;
+exports.unref = unref;
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

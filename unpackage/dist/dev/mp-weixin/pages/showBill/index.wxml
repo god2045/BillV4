@@ -1,1 +1,0 @@
-<view class="title"></view><view class="option"><navigator url="addBill"></navigator><navigator url="showBill"></navigator><navigator url="statBill"></navigator></view>

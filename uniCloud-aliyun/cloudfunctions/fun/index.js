@@ -18,5 +18,9 @@ exports.main = async (event, context) => {
     })
   }
 
+  if (event.api === 'showBill') {
+    return await db.collection('message').get()
+  }
+
   return event.content
 };

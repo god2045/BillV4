@@ -7,46 +7,27 @@
     <text>当前记录数：{{billCount}}</text>
   </view>
   <view class="option">
-    <navigator url="/pages/addBill/index" hover-class="navigator-hover">
+    <navigator class="navigator" url="/pages/addBill/addBill" hover-class="navigator-hover">
       <button type="primary">添加账单</button>
     </navigator>
-    <navigator url="/pages/showBill/index" hover-class="navigator-hover">
+    <navigator class="navigator" url="/pages/showBill/showBill" hover-class="navigator-hover">
       <button type="primary">查看账单</button>
     </navigator>
-    <navigator url="/pages/statBill/index" hover-class="navigator-hover">
+    <navigator class="navigator" url="/pages/statBill/statBill" hover-class="navigator-hover">
       <button type="primary">统计账单</button>
     </navigator>
   </view>
 </template>
 
-<script>
-  export default {
-    data() {
-      return {
-        userName: 'test',
-        billCount: '100'
-      }
-    },
-    onLoad() {
-
-    },
-    methods: {
-      publish() {
-        uniCloud.callFunction({
-          name: "fun",
-          data: {
-            opi: "publish",
-            content: this.content,
-          }
-        }).then(res => {
-          console.log(res)
-        })
-      }
-    }
-  }
+<script setup>
+  import {
+    ref
+  } from 'vue';
+  let userName = ref("test")
+  let billCount = ref("100")
 </script>
 
-<style>
+<style lang="scss" scoped>
   .title {
     display: flex;
     flex-direction: column;
@@ -68,10 +49,17 @@
     align-items: center;
     justify-content: center;
     flex: 1;
+
+    .navigator-hover {
+      background-color: aliceblue;
+    }
   }
 
-  .option navigator {
-    margin: 30rpx;
-    padding: auto 10rpx;
+  .option {
+    .navigator {
+      margin: 30rpx;
+      padding: auto 10rpx;
+    }
+
   }
 </style>
