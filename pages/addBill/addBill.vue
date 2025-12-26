@@ -3,25 +3,27 @@
     <form @submit="formSubmit" @reset="formReset">
       <view class="section">
         <view class="title">类型</view>
-        <picker @columnchange="typeCChange" @change="typeChange" :value="typeIndex" :range="type" mode="multiSelector"
+        <picker @columnchange="typeCChange" :value="billObject.typeIndex" :range="billObject.type" mode="multiSelector"
           class="input" name='billType'>
           <view class="picker">账单类型：{{showType}}</view>
         </picker>
       </view>
       <view class="section">
         <view class="title">金额</view>
-        <input type="number" class="input" maxlength="300" placeholder="请输入金额" v-model="money" name='money' />
+        <input type="number" class="input" maxlength="300" placeholder="请输入金额" v-model="billObject.money"
+          name='money' />
       </view>
       <view class="section">
         <view class="title">账单时间</view>
-        <picker @change="(e)=>date = e.detail.value" fields="day" :value="date" mode="date" class="input"
-          name='billDate'>
-          <view class="picker">账单时间：{{date}}</view>
+        <picker @change="(e)=>billObject.date = e.detail.value" fields="day" :value="billObject.date" mode="date"
+          class="input" name='billDate'>
+          <view class="picker">账单时间：{{billObject.date}}</view>
         </picker>
       </view>
       <view class="section">
         <view class="title">备注</view>
-        <input type="text" class="input" maxlength="300" placeholder="请输入备注" v-model="content" name='content' />
+        <input type="text" class="input" maxlength="300" placeholder="请输入备注" v-model="billObject.content"
+          name='content' />
       </view>
       <view class="area">
         <button class="btn" type="warn" formType="reset">重置</button>
@@ -36,15 +38,21 @@
     ref,
     computed
   } from 'vue'
-  let [date, money, content] = [ref(formatTime()), ref(''), ref('')]
   const typeC1 = ["支出", "收入"]
   const typeC2 = [
     ["餐饮", "其他支出"],
     ["工资", "投资", "其他收入"]
   ]
-  let type = ref([typeC1, typeC2[0]])
-  let typeIndex = ref([0, 0])
-  let showType = computed(() => type.value[0][typeIndex.value[0]] + "-" + type.value[1][typeIndex.value[1]])
+  let billObject = ref({
+    type: [typeC1, typeC2[0]],
+    typeIndex: [0, 0],
+    money: '',
+    date: formatTime(),
+    content: '',
+  })
+  let showType = computed(() => billObject.value.type[0][billObject.value.typeIndex[0]] + "-" + billObject.value.type[1]
+    [billObject.value.typeIndex[1]])
+
 
   function formatTime() {
     // 获取当前时间
@@ -67,15 +75,13 @@
       })
       return
     }
-    let typeLX = type.value[0][formdata.billType[0]]
-    let typeLB = type.value[1][formdata.billType[1]]
     uniCloud.callFunction({
       name: "fun",
       data: {
         api: "addBill",
-        typeLX: typeLX,
-        typeLB: typeLB,
-        money: formdata.money,
+        typeLX: billObject.value.type[0][formdata.billType[0]],
+        typeLB: billObject.value.type[1][formdata.billType[1]],
+        money: billObject.value.type[0][formdata.billType[0]] === "支出" ? "-" + formdata.money : formdata.money,
         date: formdata.billDate,
         content: formdata.content,
       }
@@ -90,35 +96,36 @@
   }
 
   function formReset(e) {
-    typeIndex.value = [0, 0]
-    type.value = [typeC1, typeC2[0]]
-    // showType.value = type.value[0][0] + "-" + type.value[1][0]
-    date.value = formatTime()
-    money.value = content.value = ''
+    Object.keys(billObject.value).map((item) => {
+      return {
+        typeIndex: [0, 0],
+        date: formatTime(),
+        type: [typeC1, typeC2[0]],
+        money: '',
+        content: '',
+      }
+    })
+    console.log(billObject.value)
   }
 
   function typeCChange(e) {
+    console.log(billObject.value.type)
+    console.log(billObject.value.typeIndex)
     var data = {
-      type: type.value,
-      typeIndex: typeIndex.value,
+      type: billObject.value.type,
+      typeIndex: billObject.value.typeIndex,
     };
     data.typeIndex[e.detail.column] = e.detail.value;
-    switch (e.detail.column) {
+    switch (data.typeIndex[0]) {
       case 0:
-        switch (data.typeIndex[0]) {
-          case 0:
-            data.type[1] = typeC2[0];
-            break;
-          case 1:
-            data.type[1] = typeC2[1];
-            break;
-        }
+        billObject.value.type[1] = typeC2[0];
+        break;
+      case 1:
+        billObject.value.type[1] = typeC2[1];
+        break;
     }
-  }
 
-  function typeChange(e) {
-    console.log(showType.value)
-    // showType.value = type.value[0][typeIndex.value[0]] + '-' + type.value[1][typeIndex.value[1]];
+
   }
 </script>
 
