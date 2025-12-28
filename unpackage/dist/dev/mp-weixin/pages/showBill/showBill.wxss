@@ -23,24 +23,91 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.title.data-v-d6cfe255 {
+  background-color: #f1fff3;
+  height: 100vh;
+}
 .title .card.data-v-d6cfe255 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+}
+.title .card .card-select.data-v-d6cfe255 {
+  display: flex;
+  justify-content: space-between;
+  width: 92%;
+  margin-top: 10%;
+}
+.title .card .sview.data-v-d6cfe255 {
+  height: 75vh;
+  margin-top: 30rpx;
+  width: 80vw;
+  border: 1.77rpx solid #006290;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .title .card .bList.data-v-d6cfe255 {
-  margin: 20rpx;
-  border: 1px solid #ccc;
-  width: 80vw;
-  background-color: deepskyblue;
+  margin: 21rpx;
+  width: 624rpx;
+  height: 92.44rpx;
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-around;
-  flex-wrap: wrap;
+  align-items: center;
 }
 .title .card .bList .icard.data-v-d6cfe255 {
-  width: 40%;
+  width: 20%;
+  height: 100%;
   padding: 5rpx 10rpx;
-  border-bottom: 1px solid #666;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.title .card .bList .icard .icard-date.data-v-d6cfe255 {
+  font-size: 20.93rpx;
+  font-weight: 600;
+  letter-spacing: 0rpx;
+  line-height: 29.3rpx;
+  color: #0068ff;
+  text-align: left;
+  vertical-align: middle;
+  font-family: "Poppins", sans-serif;
+}
+.title .card .bList .icard .icard-type.data-v-d6cfe255 {
+  height: 61.9rpx;
+  font-size: 26.16rpx;
+  font-weight: 500;
+  letter-spacing: 0rpx;
+  line-height: 36.63rpx;
+  color: #052224;
+  text-align: left;
+  vertical-align: middle;
+}
+.title .card .bList .icard .icard-b.data-v-d6cfe255 {
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  /* 显示行数 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 22.67rpx;
+  font-weight: 300;
+  letter-spacing: 0rpx;
+  line-height: 26.16rpx;
+  color: #052224;
+  text-align: center;
+  vertical-align: middle;
+}
+.title .card .bList .icard .icard-money.data-v-d6cfe255 {
+  font-size: 26.16rpx;
+  font-weight: 500;
+  letter-spacing: 0rpx;
+  line-height: 92.44rpx;
+  color: #052224;
+  text-align: center;
+  vertical-align: middle;
+}
+.title .card .bList .line.data-v-d6cfe255 {
+  border-left: 1.77rpx solid #00d09e;
+  border-right: 1.77rpx solid #00d09e;
 }

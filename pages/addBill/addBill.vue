@@ -53,79 +53,73 @@
   let showType = computed(() => billObject.value.type[0][billObject.value.typeIndex[0]] + "-" + billObject.value.type[1]
     [billObject.value.typeIndex[1]])
 
-
   function formatTime() {
-    // 获取当前时间
-    const now = new Date();
-    // 获取各个时间部分
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1; // 月份从0开始，需要+1
-    const day = now.getDate();
-    const formattedTime = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-    return formattedTime
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = (now.getMonth() + 1).toString().padStart(2, '0')
+    const day = now.getDate().toString().padStart(2, '0')
+    return `${year}-${month}-${day}`
   }
 
   function formSubmit(e) {
-    let formdata = e.detail.value
-    if (!formdata.billType || !formdata.money || !formdata.billDate) {
-      console.log("请输入必填项")
-      uni.showToast({
+    const {
+      billType: [LX, LB],
+      money,
+      billDate,
+      content
+    } = e.detail.value
+    const typeLX = billObject.value.type[0][LX]
+    const typeLB = billObject.value.type[1][LB]
+    if (!typeLX || !money || !billDate) {
+      return uni.showToast({
         title: "请输入必填项",
-        icon: "error",
+        icon: "none"
       })
-      return
     }
+
+    const {
+      type
+    } = billObject.value
+    const isExpense = typeLX === "支出"
     uniCloud.callFunction({
       name: "fun",
       data: {
         api: "addBill",
-        typeLX: billObject.value.type[0][formdata.billType[0]],
-        typeLB: billObject.value.type[1][formdata.billType[1]],
-        money: billObject.value.type[0][formdata.billType[0]] === "支出" ? "-" + formdata.money : formdata.money,
-        date: formdata.billDate,
-        content: formdata.content,
+        typeLX,
+        typeLB,
+        money: isExpense ? `-${money}` : money,
+        date: billDate,
+        content
       }
-    }).then(res => {
-      console.log(res)
+    }).then(() => {
       uni.showToast({
         title: "添加成功",
-        icon: "success",
+        icon: "success"
       })
       formReset(e)
     })
   }
 
   function formReset(e) {
-    Object.keys(billObject.value).map((item) => {
-      return {
-        typeIndex: [0, 0],
-        date: formatTime(),
-        type: [typeC1, typeC2[0]],
-        money: '',
-        content: '',
-      }
-    })
-    console.log(billObject.value)
+    billObject.value = {
+      typeIndex: [0, 0],
+      date: formatTime(),
+      type: [typeC1, typeC2[0]],
+      money: '',
+      content: '',
+    }
   }
 
   function typeCChange(e) {
-    console.log(billObject.value.type)
-    console.log(billObject.value.typeIndex)
-    var data = {
-      type: billObject.value.type,
-      typeIndex: billObject.value.typeIndex,
-    };
-    data.typeIndex[e.detail.column] = e.detail.value;
-    switch (data.typeIndex[0]) {
-      case 0:
-        billObject.value.type[1] = typeC2[0];
-        break;
-      case 1:
-        billObject.value.type[1] = typeC2[1];
-        break;
+    const {
+      column: col,
+      value: val
+    } = e.detail
+    billObject.value.typeIndex[col] = val
+    if (col === 0) {
+      billObject.value.type[1] = typeC2[val]
+      billObject.value.typeIndex[1] = 0
     }
-
-
   }
 </script>
 

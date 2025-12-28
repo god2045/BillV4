@@ -6921,9 +6921,9 @@ function isConsoleWritable() {
   return isWritable;
 }
 function initRuntimeSocketService() {
-  const hosts = "192.168.5.44,127.0.0.1";
+  const hosts = "192.168.5.63,127.0.0.1";
   const port = "8090";
-  const id = "mp-weixin_yHQ-kM";
+  const id = "mp-weixin_KQ4vYB";
   const lazy = typeof swan !== "undefined";
   let restoreError = lazy ? () => {
   } : initOnError();
@@ -8232,7 +8232,7 @@ class S {
 function T(e2) {
   return e2 && "string" == typeof e2 ? JSON.parse(e2) : e2;
 }
-const b = true, E = "mp-weixin", A = T(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), P = E, C = T('{"address":["127.0.0.1","192.168.5.44"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","C:/HBuilderX.4.87.2025121004/HBuilderX/plugins/unicloud/**/*.js"]}'), O = T('[{"provider":"aliyun","spaceName":"bill-data","spaceId":"mp-49b89e7f-521f-43b1-9854-190e790d4d3e","clientSecret":"BeycGcGx7aejQ3EspJ+OIw==","endpoint":"https://api.next.bspapp.com"}]') || [];
+const b = true, E = "mp-weixin", A = T(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), P = E, C = T('{"address":["127.0.0.1","192.168.5.63"],"servePort":7001,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","C:/HBuilderX.4.87.2025121004/HBuilderX/plugins/unicloud/**/*.js"]}'), O = T('[{"provider":"aliyun","spaceName":"bill-data","spaceId":"mp-49b89e7f-521f-43b1-9854-190e790d4d3e","clientSecret":"BeycGcGx7aejQ3EspJ+OIw==","endpoint":"https://api.next.bspapp.com"}]') || [];
 let N = "";
 try {
   N = "__UNI__A961326";
@@ -10754,14 +10754,21 @@ let er = new class {
     ;
 })();
 var tr = er;
+const createLifeCycleHook = (lifecycle, flag = 0) => (hook, target = getCurrentInstance()) => {
+  !isInSSRComponentSetup && injectHook(lifecycle, hook, target);
+};
+const onShow = /* @__PURE__ */ createLifeCycleHook(
+  ON_SHOW,
+  1 | 2
+  /* HookFlags.PAGE */
+);
 exports._export_sfc = _export_sfc;
 exports.computed = computed;
 exports.createSSRApp = createSSRApp;
 exports.f = f$1;
 exports.index = index;
-exports.isRef = isRef;
 exports.o = o$1;
-exports.onMounted = onMounted;
+exports.onShow = onShow;
 exports.ref = ref;
 exports.t = t$1;
 exports.tr = tr;
