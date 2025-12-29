@@ -15,7 +15,8 @@
     {
       "path": "pages/showBill/showBill",
       "style": {
-        "navigationBarTitleText": "账单列表"
+        "navigationBarTitleText": "账单列表",
+        "enablePullDownRefresh": true
       }
     },
     {

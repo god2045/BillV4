@@ -8,7 +8,7 @@
         <button type="primary"
           @click="dateBill(getCurrentQuarterRange().startDate,getCurrentQuarterRange().endDate)">本季度</button>
       </view>
-      <scroll-view class="sview" scroll-y="true">
+      <scroll-view class="sview" scroll-y="true" @scrolltolower='scrollLower(status)'>
         <view v-for="item in billList" :key="item._id" class="bList">
           <img class="icard" src="../../static/logo.png" />
           <view class="icard">
@@ -16,13 +16,17 @@
             <view class="icard-date">{{item.date}}</view>
           </view>
           <view class="icard line">
-            <text class="icard-b">{{item.typeLB}}({{item.content}})</text>
+            <text class="icard-b">{{item.typeLB}}{{item.content}}</text>
           </view>
           <view class="icard ">
             <text class="icard-money">{{item.money}}</text>
           </view>
         </view>
       </scroll-view>
+      <view>
+        <text>{{selectObject.startDate}}~{{selectObject.endDate}}</text>
+        <text>列表展示：{{selectObject.affectedDocs}}条</text>
+      </view>
     </view>
   </view>
 
@@ -34,9 +38,26 @@
     ref
   } from 'vue';
   import {
-    onShow
+    onShow,
+    onPullDownRefresh,
+    onPageScroll
   } from '@dcloudio/uni-app'
-  let billList = ref()
+  let dayDate = ref(formatDate(new Date()))
+  let billList = ref([])
+  let status = ref('true')
+  let selectObject = ref({
+    startDate: dayDate,
+    endDate: dayDate,
+    page: -1,
+    size: 10,
+  })
+
+  let selectSave = ref({
+    startDate: '',
+    endDate: '',
+    page: '',
+    size: '',
+  })
 
   function formatDate(date) {
     // const now = new Date()
@@ -91,26 +112,60 @@
 
 
 
-  let dayDate = ref(formatDate(new Date()))
+
 
   // function dateSelect()
 
-  function dateBill(startDate, endDate) {
-    console.log(startDate)
-    console.log(endDate)
+  function dateBill(startDate, endDate, page = 0, size = 10) {
+    // selectObject.value = {
+    //   startDate,
+    //   endDate,
+    //   page,
+    //   size
+    // }
+    console.log('调用时：', selectObject.value)
+    if (startDate === selectObject.value.startDate && endDate === selectObject.value.endDate && page === selectObject
+      .value.page) {
+      page += 1
+    }
+    selectObject.value = {
+      startDate,
+      endDate,
+      page,
+      size
+    }
     uniCloud.callFunction({
       name: "fun",
       data: {
         api: "showBill",
         startDate,
-        endDate
+        endDate,
+        page: page * 10,
+        size
       }
     }).then(res => {
       console.log(res)
       const result = res.result
-      billList.value = result.data
-      billList.value.map(item => item['isType'] = item.typeLX === '支出' ? 'red' : 'green')
+      if (result.data.length === 0) {
+        status.value = 'false'
+      } else {
+        status.value = 'true'
+        result.data.map(item => {
+          item['content'] = item.content === '' ? '' : `(${item.content})`
+          item['isType'] = item.typeLX === '支出' ? 'red' : 'green'
+        })
+        billList.value = [...billList.value, ...result.data]
+      }
     })
+  }
+
+  function scrollLower(type) {
+    if (type === 'true') {
+      dateBill(selectObject.value.startDate, selectObject.value.endDate, selectObject.value.page, selectObject.value
+        .size)
+      return
+    }
+    return
   }
 
   onShow(() => {
@@ -137,7 +192,7 @@
       }
 
       .sview {
-        height: 75vh;
+        height: 55vh;
         margin-top: 30rpx;
         width: 80vw;
         border: 1.77rpx solid rgba(0, 98, 144, 1.0);

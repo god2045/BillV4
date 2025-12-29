@@ -36,11 +36,12 @@ exports.main = async (event, context) => {
 
   if (event.api === 'showBill') {
     return await db.collection('message').where({
-      date: db.command.and([
-        db.command.gte(event.startDate),
-        db.command.lte(event.endDate)
-      ])
-    }).orderBy("date", "desc").orderBy("createTime", "desc").get()
+        date: db.command.and([
+          db.command.gte(event.startDate),
+          db.command.lte(event.endDate)
+        ])
+      }).orderBy("date", "desc").orderBy("createTime", "desc").skip(event.page)
+      .limit(event.size).get()
   }
 
   return event.content
