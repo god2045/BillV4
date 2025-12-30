@@ -9,6 +9,7 @@
           @click="dateBill(getCurrentQuarterRange().startDate,getCurrentQuarterRange().endDate)">本季度</button>
       </view>
       <scroll-view class="sview" scroll-y="true" @scrolltolower='scrollLower(status)'>
+        <view v-if="showNotData">暂无数据</view>
         <view v-for="item in billList" :key="item._id" class="bList">
           <img class="icard" src="../../static/logo.png" />
           <view class="icard">
@@ -23,9 +24,10 @@
           </view>
         </view>
       </scroll-view>
-      <view>
-        <text>{{selectObject.startDate}}~{{selectObject.endDate}}</text>
-        <text>列表展示：{{selectObject.affectedDocs}}条</text>
+      <view class="showCount">
+        <text>{{selectObject.startDate}}</text>
+        <text>~{{selectObject.endDate}}</text>
+        <text>列表展示：{{count}}条</text>
       </view>
     </view>
   </view>
@@ -51,6 +53,8 @@
     page: -1,
     size: 10,
   })
+  let count = ref(0)
+  let showNotData = ref(false)
 
   let selectSave = ref({
     startDate: '',
@@ -117,21 +121,20 @@
   // function dateSelect()
 
   function dateBill(startDate, endDate, page = 0, size = 10) {
-    // selectObject.value = {
-    //   startDate,
-    //   endDate,
-    //   page,
-    //   size
-    // }
-    console.log('调用时：', selectObject.value)
-    if (startDate === selectObject.value.startDate && endDate === selectObject.value.endDate && page === selectObject
-      .value.page) {
-      page += 1
+    const select = selectObject.value
+    const sameParams = startDate === select.startDate &&
+      endDate === select.endDate &&
+      page === select.page
+    if (!sameParams) {
+      billList.value = []
+      count.value = 0
     }
+
+    const currentPage = sameParams ? page + 1 : page
     selectObject.value = {
       startDate,
       endDate,
-      page,
+      page: currentPage,
       size
     }
     uniCloud.callFunction({
@@ -140,29 +143,30 @@
         api: "showBill",
         startDate,
         endDate,
-        page: page * 10,
+        page: currentPage * 10,
         size
       }
     }).then(res => {
       console.log(res)
       const result = res.result
-      if (result.data.length === 0) {
-        status.value = 'false'
-      } else {
-        status.value = 'true'
-        result.data.map(item => {
-          item['content'] = item.content === '' ? '' : `(${item.content})`
-          item['isType'] = item.typeLX === '支出' ? 'red' : 'green'
-        })
+      count.value += result.affectedDocs
+      showNotData.value = count.value <= 0
+      status.value = !(result.data.length === 0)
+      if (status.value) {
+        result.data.map(item => ({
+          ...item,
+          content: item.content ? `(${item.content})` : '',
+          isType: item.typeLX === '支出' ? 'red' : 'green'
+        }))
         billList.value = [...billList.value, ...result.data]
       }
     })
   }
 
   function scrollLower(type) {
-    if (type === 'true') {
-      dateBill(selectObject.value.startDate, selectObject.value.endDate, selectObject.value.page, selectObject.value
-        .size)
+    let select = selectObject.value
+    if (type === true) {
+      dateBill(select.startDate, select.endDate, select.page, select.size)
       return
     }
     return
@@ -197,6 +201,13 @@
         width: 80vw;
         border: 1.77rpx solid rgba(0, 98, 144, 1.0);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .showCount {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        width: 80vw;
       }
 
       .bList {
