@@ -40,11 +40,17 @@
   margin-top: 10%;
 }
 .title .card .sview.data-v-d6cfe255 {
-  height: 75vh;
+  height: 55vh;
   margin-top: 30rpx;
   width: 80vw;
   border: 1.77rpx solid #006290;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.title .card .showCount.data-v-d6cfe255 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 80vw;
 }
 .title .card .bList.data-v-d6cfe255 {
   margin: 21rpx;

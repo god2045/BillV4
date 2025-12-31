@@ -9,7 +9,7 @@
 // 详细JQL语法，请参考：https://uniapp.dcloud.net.cn/uniCloud/jql.html
 
 // 下面示例查询uni-id-users表的所有数据
-db.collection('message').where("date == '2025-12-30'").remove();
+db.collection('message').get();
 
 db.collection('message').limit(1).get()
 db.collection('message').where("date == '2025-12-28'").orderBy("date", "desc").orderBy("createTime", "desc").get()
@@ -17,4 +17,8 @@ db.collection('message').where("date == '2025-12-28'").orderBy("date", "desc").o
   .limit(30).get()
 
 
-db.collection('message').where("date == '2025-12-30").remove();
+db.collection('message')
+  .groupBy('typeLX,date') // 按多个字段分组
+  .groupField('count(*) as total') // 统计数量
+  .orderBy("date", "desc")
+  .get()

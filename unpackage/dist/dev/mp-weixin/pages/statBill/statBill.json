@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "统计账单",
-  "usingComponents": {}
+  "usingComponents": {
+    "qiun-data-charts": "../../uni_modules/qiun-data-charts(uni_modules)/components/qiun-data-charts/qiun-data-charts"
+  }
 }

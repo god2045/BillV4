@@ -6,10 +6,12 @@ let db = uniCloud.database({
   throwOnNotFound: false,
 })
 exports.main = async (event, context) => {
-  if (event.api === 'publish') {
-    return await db.collection('message').add({
-      content: event.content,
-    })
+  if (event.api === 'billData') {
+    return awaitdb.collection('message')
+      .groupBy('typeLX,date') // 按多个字段分组
+      .groupField('count(*) as total') // 统计数量
+      .orderBy("date", "desc")
+      .get()
   }
 
   if (event.api === 'addBill') {
