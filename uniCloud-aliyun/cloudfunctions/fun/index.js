@@ -7,12 +7,52 @@ let db = uniCloud.database({
 })
 exports.main = async (event, context) => {
   if (event.api === 'billData') {
-    return awaitdb.collection('message')
-      .groupBy('typeLX,date') // 按多个字段分组
-      .groupField('count(*) as total') // 统计数量
-      .orderBy("date", "desc")
-      .get()
+    const db = uniCloud.database();
+    const $ = db.command.aggregate;
+
+    return await db.collection('message')
+      .aggregate()
+      .match({
+        date: db.command.and([
+          db.command.gte(event.startDate),
+          db.command.lte(event.endDate)
+        ])
+      })
+      .addFields({
+        // 使用算术运算将字符串转换为数字
+        moneyNum: $.add([{
+            $multiply: [{
+              $toDouble: {
+                $ifNull: ["$money", "0"]
+              }
+            }, 1]
+          },
+          0
+        ])
+      })
+      .group({
+        _id: {
+          typeLX: '$typeLX',
+          date: '$date'
+        },
+        total: $.sum('$moneyNum'),
+        count: $.sum(1)
+      })
+      .project({
+        _id: 0,
+        typeLX: '$_id.typeLX',
+        date: '$_id.date',
+        total: 1,
+        count: 1
+      })
+      .sort({
+        date: -1
+      })
+      .end();
   }
+
+
+
 
   if (event.api === 'addBill') {
     const now = new Date();

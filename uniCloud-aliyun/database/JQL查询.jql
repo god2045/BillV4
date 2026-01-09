@@ -11,14 +11,14 @@
 // 下面示例查询uni-id-users表的所有数据
 db.collection('message').get();
 
-db.collection('message').limit(1).get()
+db.collection('message').limit(3).get()
 db.collection('message').where("date == '2025-12-28'").orderBy("date", "desc").orderBy("createTime", "desc").get()
 db.collection('message').where("date == '2025-12-28'").orderBy("date", "desc").orderBy("createTime", "desc").skip(6)
   .limit(30).get()
 
 
-db.collection('message')
+db.collection('message').where("date >= '2025-12-20'")
   .groupBy('typeLX,date') // 按多个字段分组
-  .groupField('count(*) as total') // 统计数量
+  .groupField('sum(money) as total') // 统计数量
   .orderBy("date", "desc")
   .get()

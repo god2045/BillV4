@@ -1,6 +1,6 @@
 <template>
   <view class="charts-box">
-    <qiun-data-charts type="column" :chartData="chartData" />
+    <qiun-data-charts type="column" :chartData="chartData" :opts="opts" />
   </view>
 </template>
 
@@ -12,58 +12,126 @@
     onShow
   } from '@dcloudio/uni-app';
   let chartData = ref({})
-  // let opts = ref({
-  //   color: ["#1890FF", "#91CB74", "#FAC858", "#EE6666", "#73C0DE", "#3CA272", "#FC8452", "#9A60B4", "#ea7ccc"],
-  //   padding: [15, 15, 0, 5],
-  //   enableScroll: false,
-  //   legend: {},
-  //   xAxis: {
-  //     disableGrid: true
-  //   },
-  //   yAxis: {
-  //     data: [{
-  //       min: 0
-  //     }]
-  //   },
-  //   extra: {
-  //     column: {
-  //       type: "group",
-  //       width: 30,
-  //       activeBgColor: "#000000",
-  //       activeBgOpacity: 0.08
-  //     }
-  //   }
-  // })
+  let opts = ref({
+    color: ["#91CB74", "#EE6666"],
+    padding: [15, 15, 0, 5],
+    enableScroll: false,
+    xAxis: {
+      disableGrid: true
+    },
+    yAxis: {
+      data: [{
+        min: 0
+      }]
+    },
+    extra: {
+      column: {
+        type: "group",
+        width: 15,
+        activeBgColor: "#000000",
+        activeBgOpacity: 0.08
+      }
+    }
+  })
 
-  function getBillData() {
-    uniCloud.callFunction({
+  async function getBillData(startDate, endDate) {
+    return await uniCloud.callFunction({
       name: "fun",
       data: {
-        api: "billData"
+        api: "billData",
+        startDate,
+        endDate
       }
-    }).then(res) => {
-      console.log(res)
-      const result = res.result
-      return result.data
-    }
+    })
   }
 
-  function getServerData() {
-    setTimeout(() => {
-      let res = {
-        categories: ["2018", "2019", "2020", "2021", "2022", "2023"],
-        series: [{
-            name: "目标值",
-            data: [35, 36, 31, 33, 13, 34]
-          },
-          {
-            name: "完成量",
-            data: [18, 27, 21, 24, 6, 28]
-          }
-        ]
-      };
-      chartData.value = JSON.parse(JSON.stringify(res));
-    }, 500);
+  function getWeekDay(day) {
+    const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+    return `星期${weekDays[day]}`;
+  }
+
+  function getLastSevenDays() {
+    const days = [];
+    const today = new Date();
+
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从0开始，需要+1
+      const day = String(date.getDate()).padStart(2, '0');
+
+      days.push({
+        date: `${year}-${month}-${day}`, // 完整日期
+        year: year,
+        month: month,
+        day: day,
+        week: getWeekDay(date.getDay()), // 星期几
+        timestamp: date.getTime() // 时间戳
+      });
+    }
+
+    return days;
+  }
+
+  function generateExpenseIncomeArrays(data, dates) {
+    // 创建支出和收入的Map
+    const expenseMap = new Map();
+    const incomeMap = new Map();
+
+    // 分类存储数据
+    data.forEach(item => {
+      if (item.typeLX === '支出') {
+        expenseMap.set(item.date, item.total);
+      } else if (item.typeLX === '收入') {
+        incomeMap.set(item.date, item.total);
+      }
+    });
+
+    // 生成数组
+    const expenseArray = dates.map(date => -expenseMap.get(date) || 0);
+    const incomeArray = dates.map(date => incomeMap.get(date) || 0);
+
+    return {
+      expense: expenseArray,
+      income: incomeArray
+    };
+  }
+
+  async function getServerData() {
+    let days = getLastSevenDays()
+    let date = []
+    let inData = []
+    let outData = []
+    let categories = []
+    days.map((items) => {
+      categories.push(items.week)
+      date.push(items.date)
+    })
+
+    const billData = await getBillData(date[0], date[6])
+    console.log("billData的值", billData.result.data)
+    const dataB = billData.result.data
+    console.log("dataB的值", dataB)
+    const inOutData = generateExpenseIncomeArrays(dataB, date)
+    inData = inOutData.income
+    outData = inOutData.expense
+    console.log(inData)
+
+    let res = {
+      categories,
+      series: [{
+          name: "收入",
+          data: inData
+        },
+        {
+          name: "支出",
+          data: outData
+        }
+      ]
+    };
+    chartData.value = JSON.parse(JSON.stringify(res));
   }
   onShow(() => {
     getServerData()
